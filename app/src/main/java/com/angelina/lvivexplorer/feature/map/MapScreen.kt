@@ -24,6 +24,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
+import com.angelina.lvivexplorer.core.ui.categoryArgb
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -103,6 +106,12 @@ fun MapScreen(
                             position = GeoPoint(place.latitude, place.longitude)
                             title = place.name
                             subDescription = place.category
+                            icon = AppCompatResources.getDrawable(context, org.osmdroid.library.R.drawable.marker_default)
+                                ?.mutate()
+                                ?.let { drawable ->
+                                    DrawableCompat.setTint(drawable, categoryArgb(place.category))
+                                    drawable
+                                }
                             setOnMarkerClickListener { _, _ ->
                                 onOpenDetails(place.id)
                                 true

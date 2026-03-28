@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -17,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.angelina.lvivexplorer.core.ui.categoryColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +48,15 @@ fun PlaceDetailScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(text = current.name)
-            Text(text = current.category)
+            Surface(
+                color = categoryColor(current.category),
+                contentColor = Color.White
+            ) {
+                Text(
+                    text = current.category,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                )
+            }
             Text(text = current.address)
             Text(text = current.description)
             OutlinedTextField(

@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.angelina.lvivexplorer.core.ui.categoryColor
 import com.angelina.lvivexplorer.feature.map.MapViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +45,7 @@ fun FilterScreen(
                     FilterChip(
                         selected = selected.contains(category),
                         onClick = { viewModel.toggleCategory(category) },
-                        label = { Text(category) }
+                        label = { Text(text = category, color = categoryColor(category)) }
                     )
                 }
             }
