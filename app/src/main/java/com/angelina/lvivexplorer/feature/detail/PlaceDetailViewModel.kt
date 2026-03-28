@@ -19,7 +19,7 @@ class PlaceDetailViewModel @Inject constructor(
     private val placeRepository: PlaceRepository,
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
-    private val placeId: String = savedStateHandle["placeId"].orEmpty()
+    private val placeId: String = savedStateHandle.get<String>("placeId").orEmpty()
 
     private val _place = MutableStateFlow<Place?>(null)
     val place: StateFlow<Place?> = _place
