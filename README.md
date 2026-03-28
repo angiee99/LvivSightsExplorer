@@ -9,7 +9,7 @@ Semester Android project: a map-based app to explore architecture sights in Lviv
 - Room (local persistence)
 - DataStore (local profile/settings)
 - Coroutines + Flow
-- Google Maps Compose
+- osmdroid (OpenStreetMap)
 
 ## Features
 
@@ -47,15 +47,9 @@ Semester Android project: a map-based app to explore architecture sights in Lviv
 
 1. Open project in Android Studio (Ladybug+ recommended).
 2. Let IDE sync Gradle dependencies.
-3. Add Google Maps key in `local.properties`:
+3. Run the `app` configuration on an Android emulator/device.
 
-   ```properties
-   MAPS_API_KEY=your_api_key_here
-   ```
-
-4. Run the `app` configuration on an Android emulator/device.
-
-If `MAPS_API_KEY` is missing, the app still compiles; map tiles may not render correctly.
+The app uses OpenStreetMap tiles via `osmdroid`, so no Google API key is required.
 
 ## Tests
 
