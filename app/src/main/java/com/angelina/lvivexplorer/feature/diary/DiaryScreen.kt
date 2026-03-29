@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -98,8 +99,12 @@ private fun DiaryEntryList(
                 shape = RoundedCornerShape(14.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 52.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = entry.placeName,
@@ -120,27 +125,29 @@ private fun DiaryEntryList(
                         modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 6.dp, bottom = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            if (editing) {
-                                OutlinedTextField(
-                                    value = note,
-                                    onValueChange = { note = it },
-                                    label = { Text("Note") },
-                                    modifier = Modifier.fillMaxWidth().heightIn(min = 96.dp)
-                                )
-                            } else {
-                                Card(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        text = note.ifBlank { "No note yet." },
-                                        modifier = Modifier.padding(12.dp)
+                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Box {
+                                if (editing) {
+                                    OutlinedTextField(
+                                        value = note,
+                                        onValueChange = { note = it },
+                                        label = { Text("Note") },
+                                        modifier = Modifier.fillMaxWidth().heightIn(min = 96.dp)
                                     )
+                                } else {
+                                    Card(modifier = Modifier.fillMaxWidth()) {
+                                        Text(
+                                            text = note.ifBlank { "No note yet." },
+                                            modifier = Modifier.padding(12.dp)
+                                        )
+                                    }
                                 }
                             }
-                        }
-                        Column {
                             TextButton(onClick = { onOpenDetails(entry.placeId) }) {
                                 Text("Details")
                             }
+                        }
+                        Column {
                             IconButton(
                                 onClick = {
                                     if (editing) {
