@@ -54,7 +54,7 @@ fun MapScreen(
         MapView(context).apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(13.0)
+            controller.setZoom(15.0)
             controller.setCenter(lvivCenter)
         }
     }
