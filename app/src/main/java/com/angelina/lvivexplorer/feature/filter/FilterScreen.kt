@@ -2,14 +2,15 @@ package com.angelina.lvivexplorer.feature.filter
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,6 +30,7 @@ fun FilterScreen(
 ) {
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val selected by viewModel.selectedCategoriesState.collectAsStateWithLifecycle()
+    val allSelected = categories.isNotEmpty() && selected.size == categories.size
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Filter categories") }) }
@@ -40,13 +42,31 @@ fun FilterScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Select all categories")
+                Checkbox(
+                    checked = allSelected,
+                    onCheckedChange = { checked ->
+                        viewModel.setAllFilters(categories, checked)
+                    }
+                )
+            }
             LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(categories) { category ->
-                    FilterChip(
-                        selected = selected.contains(category),
-                        onClick = { viewModel.toggleCategory(category) },
-                        label = { Text(text = category, color = categoryColor(category)) }
-                    )
+                    val isChecked = selected.contains(category)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = category, color = categoryColor(category))
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = { viewModel.toggleCategory(category) }
+                        )
+                    }
                 }
             }
             Button(
@@ -54,12 +74,6 @@ fun FilterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Apply")
-            }
-            Button(
-                onClick = { viewModel.clearFilters() },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Clear all")
             }
         }
     }
