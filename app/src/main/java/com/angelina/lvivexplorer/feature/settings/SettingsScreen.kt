@@ -5,8 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,9 +31,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun SettingsScreen(viewModel: SettingsViewModel) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     var profileName by rememberSaveable { mutableStateOf("") }
+    var isEditingProfile by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(settings.profileName) {
-        if (profileName.isBlank()) profileName = settings.profileName
+        if (!isEditingProfile) profileName = settings.profileName
     }
 
     Scaffold(topBar = { TopAppBar(title = { Text("Settings") }) }) { padding ->
@@ -39,17 +45,37 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            OutlinedTextField(
-                value = profileName,
-                onValueChange = { profileName = it },
-                label = { Text("Profile name (local)") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Button(
-                onClick = { viewModel.saveProfileName(profileName) },
-                modifier = Modifier.fillMaxWidth()
+            Text("Profile name")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Save profile")
+                Text(if (settings.profileName.isBlank()) "Not filled" else settings.profileName)
+                IconButton(
+                    onClick = {
+                        if (isEditingProfile) {
+                            viewModel.saveProfileName(profileName)
+                            isEditingProfile = false
+                        } else {
+                            profileName = settings.profileName
+                            isEditingProfile = true
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit profile name"
+                    )
+                }
+            }
+            if (isEditingProfile) {
+                OutlinedTextField(
+                    value = profileName,
+                    onValueChange = { profileName = it },
+                    label = { Text("Profile name (local)") },
+                    placeholder = { Text("Not filled") },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
             Text("Theme mode")
             Button(
