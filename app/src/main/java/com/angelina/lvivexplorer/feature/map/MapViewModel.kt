@@ -46,4 +46,8 @@ class MapViewModel @Inject constructor(
     fun clearFilters() {
         selectedCategories.value = emptySet()
     }
+
+    fun setAllFilters(categories: List<String>, selected: Boolean) {
+        selectedCategories.value = if (selected) categories.toSet() else emptySet()
+    }
 }

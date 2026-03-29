@@ -1,17 +1,31 @@
 package com.angelina.lvivexplorer.feature.detail
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +48,7 @@ fun PlaceDetailScreen(
     val place by viewModel.place.collectAsStateWithLifecycle()
     val savedStatuses by viewModel.savedStatuses.collectAsStateWithLifecycle()
     var note by remember { mutableStateOf("") }
+    val sectionShape = RoundedCornerShape(14.dp)
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Place details") }) }
@@ -50,45 +65,102 @@ fun PlaceDetailScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(text = current.name)
-            Surface(
-                color = categoryColor(current.category),
-                contentColor = Color.White
-            ) {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = current.category,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                    text = current.name,
+                    style = MaterialTheme.typography.headlineMedium
                 )
+                val categoryTint = categoryColor(current.category)
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedCard(
+                        shape = RoundedCornerShape(50),
+                        border = BorderStroke(1.dp, categoryTint),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = categoryTint.copy(alpha = 0.16f)
+                        )
+                    ) {
+                        Text(
+                            text = current.category,
+                            color = categoryTint,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextButton(
+                        onClick = { onShowOnMap(current.id) },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.textButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                        ),
+                        modifier = Modifier.padding(0.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Place,
+                            contentDescription = "Show on map"
+                        )
+                        Text(
+                            text = current.address,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
+                    }
+                }
+                Text(text = current.description)
             }
-            Text(text = current.address)
-            Text(text = current.description)
-            Button(
-                onClick = { onShowOnMap(current.id) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Show on map")
-            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
             val isVisitedSaved = savedStatuses.contains(DiaryStatus.VISITED)
             val isWantToVisitSaved = savedStatuses.contains(DiaryStatus.WANT_TO_VISIT)
             val isFullySaved = isVisitedSaved && isWantToVisitSaved
+
+            LaunchedEffect(isFullySaved) {
+                if (isFullySaved) note = ""
+            }
+
             if (!isFullySaved) {
                 OutlinedTextField(
                     value = note,
                     onValueChange = { note = it },
                     label = { Text("Optional note") },
+                    shape = sectionShape,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            Button(onClick = {
-                viewModel.markVisited(note.ifBlank { null })
-                onDone()
-            }, enabled = !isVisitedSaved, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = {
+                    viewModel.markVisited(note.ifBlank { null })
+                    onDone()
+                },
+                enabled = !isVisitedSaved,
+                shape = sectionShape,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(if (isVisitedSaved) "Marked as visited" else "Mark as visited")
             }
-            Button(onClick = {
-                viewModel.markWantToVisit(note.ifBlank { null })
-                onDone()
-            }, enabled = !isWantToVisitSaved, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = {
+                    viewModel.markWantToVisit(note.ifBlank { null })
+                    onDone()
+                },
+                enabled = !isWantToVisitSaved,
+                shape = sectionShape,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = Color.Transparent,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    if (isWantToVisitSaved) {
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.7f)
+                    } else {
+                        MaterialTheme.colorScheme.primary
+                    }
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(if (isWantToVisitSaved) "Added to want to visit" else "Add to want to visit")
             }
         }
