@@ -39,16 +39,12 @@ fun LvivExplorerApp() {
     val currentRoute = backStack?.destination?.route
 
     val topLevelItems = listOf(
-        BottomNavItem("Map", Destinations.Map.route, Icons.Default.Map),
+        BottomNavItem("Map", Destinations.Map.baseRoute, Icons.Default.Map),
         BottomNavItem("Diary", Destinations.Diary.route, Icons.Default.List),
         BottomNavItem("Settings", Destinations.Settings.route, Icons.Default.Settings)
     )
 
-    val showBottomBar = currentRoute in setOf(
-        Destinations.Map.route,
-        Destinations.Diary.route,
-        Destinations.Settings.route
-    )
+    val showBottomBar = currentRoute in setOf(Destinations.Map.route, Destinations.Diary.route, Destinations.Settings.route)
 
     Scaffold(
         bottomBar = {
@@ -56,7 +52,11 @@ fun LvivExplorerApp() {
                 NavigationBar {
                     topLevelItems.forEach { item ->
                         NavigationBarItem(
-                            selected = currentRoute == item.route,
+                            selected = if (item.route == Destinations.Map.baseRoute) {
+                                currentRoute == Destinations.Map.route
+                            } else {
+                                currentRoute == item.route
+                            },
                             onClick = {
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.startDestinationId) {
@@ -79,9 +79,20 @@ fun LvivExplorerApp() {
             startDestination = Destinations.Map.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Destinations.Map.route) {
+            composable(
+                route = Destinations.Map.route,
+                arguments = listOf(
+                    navArgument("focusPlaceId") {
+                        type = NavType.StringType
+                        nullable = true
+                        defaultValue = null
+                    }
+                )
+            ) { backStackEntry ->
+                val focusPlaceId = backStackEntry.arguments?.getString("focusPlaceId")
                 MapScreen(
                     viewModel = mapViewModel,
+                    focusPlaceId = focusPlaceId,
                     onOpenFilter = { navController.navigate(Destinations.Filter.route) },
                     onOpenDetails = { placeId ->
                         navController.navigate(Destinations.Detail.routeWithArg(placeId))
@@ -101,12 +112,23 @@ fun LvivExplorerApp() {
                 val detailViewModel: PlaceDetailViewModel = hiltViewModel()
                 PlaceDetailScreen(
                     viewModel = detailViewModel,
-                    onDone = { navController.popBackStack() }
+                    onDone = { navController.popBackStack() },
+                    onShowOnMap = { placeId ->
+                        navController.navigate(Destinations.Map.routeWithFocus(placeId)) {
+                            popUpTo(Destinations.Map.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
             composable(Destinations.Diary.route) {
                 val diaryViewModel: DiaryViewModel = hiltViewModel()
-                DiaryScreen(viewModel = diaryViewModel)
+                DiaryScreen(
+                    viewModel = diaryViewModel,
+                    onOpenDetails = { placeId ->
+                        navController.navigate(Destinations.Detail.routeWithArg(placeId))
+                    }
+                )
             }
             composable(Destinations.Settings.route) {
                 val settingsViewModel: SettingsViewModel = hiltViewModel()

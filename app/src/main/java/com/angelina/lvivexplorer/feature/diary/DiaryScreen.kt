@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,7 +43,10 @@ import com.angelina.lvivexplorer.domain.model.DiaryEntry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryScreen(viewModel: DiaryViewModel) {
+fun DiaryScreen(
+    viewModel: DiaryViewModel,
+    onOpenDetails: (String) -> Unit
+) {
     val visited by viewModel.visitedEntries.collectAsStateWithLifecycle()
     val want by viewModel.wantToVisitEntries.collectAsStateWithLifecycle()
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -58,7 +62,8 @@ fun DiaryScreen(viewModel: DiaryViewModel) {
                 entries = entries,
                 onDelete = viewModel::deleteEntry,
                 onUpdateNote = viewModel::updateNote,
-                canEditVisitedAt = selectedTab == 0
+                canEditVisitedAt = selectedTab == 0,
+                onOpenDetails = onOpenDetails
             )
         }
     }
@@ -69,7 +74,8 @@ private fun DiaryEntryList(
     entries: List<DiaryEntry>,
     onDelete: (Long) -> Unit,
     onUpdateNote: (Long, String?, Long?) -> Unit,
-    canEditVisitedAt: Boolean
+    canEditVisitedAt: Boolean,
+    onOpenDetails: (String) -> Unit
 ) {
     if (entries.isEmpty()) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -132,6 +138,9 @@ private fun DiaryEntryList(
                             }
                         }
                         Column {
+                            TextButton(onClick = { onOpenDetails(entry.placeId) }) {
+                                Text("Details")
+                            }
                             IconButton(
                                 onClick = {
                                     if (editing) {

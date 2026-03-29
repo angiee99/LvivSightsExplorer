@@ -27,7 +27,8 @@ import com.angelina.lvivexplorer.core.ui.categoryColor
 @Composable
 fun PlaceDetailScreen(
     viewModel: PlaceDetailViewModel,
-    onDone: () -> Unit
+    onDone: () -> Unit,
+    onShowOnMap: (String) -> Unit
 ) {
     val place by viewModel.place.collectAsStateWithLifecycle()
     var note by remember { mutableStateOf("") }
@@ -59,6 +60,12 @@ fun PlaceDetailScreen(
             }
             Text(text = current.address)
             Text(text = current.description)
+            Button(
+                onClick = { onShowOnMap(current.id) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Show on map")
+            }
             OutlinedTextField(
                 value = note,
                 onValueChange = { note = it },

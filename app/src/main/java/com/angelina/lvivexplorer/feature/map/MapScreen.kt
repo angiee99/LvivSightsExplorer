@@ -16,7 +16,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +38,7 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun MapScreen(
     viewModel: MapViewModel,
+    focusPlaceId: String?,
     onOpenFilter: () -> Unit,
     onOpenDetails: (String) -> Unit
 ) {
@@ -45,6 +48,7 @@ fun MapScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val lvivCenter = GeoPoint(49.8397, 24.0297)
+    var lastFocusedPlaceId by remember { mutableStateOf<String?>(null) }
 
     val mapView = remember {
         MapView(context).apply {
@@ -97,8 +101,11 @@ fun MapScreen(
                 factory = { mapView },
                 update = { view ->
                     view.overlays.removeAll { it is Marker }
-                    if (places.isNotEmpty()) {
-                        view.controller.setCenter(lvivCenter)
+                    val focusTarget = focusPlaceId?.let { id -> places.firstOrNull { it.id == id } }
+                    if (focusTarget != null && lastFocusedPlaceId != focusTarget.id) {
+                        view.controller.setZoom(16.0)
+                        view.controller.setCenter(GeoPoint(focusTarget.latitude, focusTarget.longitude))
+                        lastFocusedPlaceId = focusTarget.id
                     }
 
                     places.forEach { place ->
