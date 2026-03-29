@@ -18,6 +18,9 @@ class DiaryRepositoryImpl @Inject constructor(
     override fun observeByStatus(status: DiaryStatus): Flow<List<DiaryEntry>> =
         diaryDao.observeByStatus(status).map { list -> list.map { it.toDomain() } }
 
+    override fun observeSavedStatuses(placeId: String): Flow<Set<DiaryStatus>> =
+        diaryDao.observeStatusesForPlace(placeId).map { it.toSet() }
+
     override suspend fun addOrUpdate(
         placeId: String,
         status: DiaryStatus,

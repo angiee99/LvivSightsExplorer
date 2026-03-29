@@ -45,6 +45,9 @@ interface DiaryDao {
         status: com.angelina.lvivexplorer.domain.model.DiaryStatus
     ): DiaryEntryEntity?
 
+    @Query("SELECT status FROM diary_entries WHERE placeId = :placeId")
+    fun observeStatusesForPlace(placeId: String): Flow<List<com.angelina.lvivexplorer.domain.model.DiaryStatus>>
+
     @Transaction
     suspend fun upsertUniqueByPlaceStatus(entry: DiaryEntryEntity) {
         val existing = findByPlaceAndStatus(entry.placeId, entry.status)

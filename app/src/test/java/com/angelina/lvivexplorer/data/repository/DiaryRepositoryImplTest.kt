@@ -60,6 +60,10 @@ private class FakeDiaryDao : DiaryDao {
         return state
     }
 
+    override fun observeStatusesForPlace(placeId: String): Flow<List<DiaryStatus>> {
+        return MutableStateFlow(entries.filter { it.placeId == placeId }.map { it.status })
+    }
+
     override suspend fun findByPlaceAndStatus(placeId: String, status: DiaryStatus): DiaryEntryEntity? {
         return entries.firstOrNull { it.placeId == placeId && it.status == status }
     }

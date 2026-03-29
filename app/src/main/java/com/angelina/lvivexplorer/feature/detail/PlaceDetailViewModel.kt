@@ -10,7 +10,9 @@ import com.angelina.lvivexplorer.domain.repository.PlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -23,6 +25,8 @@ class PlaceDetailViewModel @Inject constructor(
 
     private val _place = MutableStateFlow<Place?>(null)
     val place: StateFlow<Place?> = _place
+    val savedStatuses: StateFlow<Set<DiaryStatus>> = diaryRepository.observeSavedStatuses(placeId)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
 
     init {
         viewModelScope.launch {
@@ -31,6 +35,7 @@ class PlaceDetailViewModel @Inject constructor(
     }
 
     fun markVisited(note: String?) {
+        if (savedStatuses.value.contains(DiaryStatus.VISITED)) return
         viewModelScope.launch {
             diaryRepository.addOrUpdate(
                 placeId = placeId,
@@ -42,6 +47,7 @@ class PlaceDetailViewModel @Inject constructor(
     }
 
     fun markWantToVisit(note: String?) {
+        if (savedStatuses.value.contains(DiaryStatus.WANT_TO_VISIT)) return
         viewModelScope.launch {
             diaryRepository.addOrUpdate(
                 placeId = placeId,

@@ -16,7 +16,10 @@ import com.angelina.lvivexplorer.domain.model.DiaryStatus
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("placeId"), Index("status")]
+    indices = [
+        Index("status"),
+        Index(value = ["placeId", "status"], unique = true)
+    ]
 )
 data class DiaryEntryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

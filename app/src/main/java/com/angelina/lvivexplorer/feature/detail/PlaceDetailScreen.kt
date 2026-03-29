@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.angelina.lvivexplorer.core.ui.categoryColor
+import com.angelina.lvivexplorer.domain.model.DiaryStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +32,7 @@ fun PlaceDetailScreen(
     onShowOnMap: (String) -> Unit
 ) {
     val place by viewModel.place.collectAsStateWithLifecycle()
+    val savedStatuses by viewModel.savedStatuses.collectAsStateWithLifecycle()
     var note by remember { mutableStateOf("") }
 
     Scaffold(
@@ -66,23 +68,28 @@ fun PlaceDetailScreen(
             ) {
                 Text("Show on map")
             }
-            OutlinedTextField(
-                value = note,
-                onValueChange = { note = it },
-                label = { Text("Optional note") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            val isVisitedSaved = savedStatuses.contains(DiaryStatus.VISITED)
+            val isWantToVisitSaved = savedStatuses.contains(DiaryStatus.WANT_TO_VISIT)
+            val isFullySaved = isVisitedSaved && isWantToVisitSaved
+            if (!isFullySaved) {
+                OutlinedTextField(
+                    value = note,
+                    onValueChange = { note = it },
+                    label = { Text("Optional note") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Button(onClick = {
                 viewModel.markVisited(note.ifBlank { null })
                 onDone()
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text("Mark as visited")
+            }, enabled = !isVisitedSaved, modifier = Modifier.fillMaxWidth()) {
+                Text(if (isVisitedSaved) "Marked as visited" else "Mark as visited")
             }
             Button(onClick = {
                 viewModel.markWantToVisit(note.ifBlank { null })
                 onDone()
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text("Add to want to visit")
+            }, enabled = !isWantToVisitSaved, modifier = Modifier.fillMaxWidth()) {
+                Text(if (isWantToVisitSaved) "Added to want to visit" else "Add to want to visit")
             }
         }
     }
