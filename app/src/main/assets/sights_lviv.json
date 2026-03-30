@@ -43,5 +43,50 @@
     "longitude": 24.0336,
     "description": "A fortified monastery complex with significant cultural and architectural value.",
     "address": "Soborna Sq, 3A, Lviv"
+  },
+  {
+    "id": "maria-zankovetska-theatre",
+    "name": "Maria Zankovetska Theatre",
+    "category": "Theater",
+    "latitude": 49.84395,
+    "longitude": 24.027244,
+    "description": "Historic neoclassical drama theatre and one of the best-known stage buildings in Lviv.",
+    "address": "Lesi Ukrainky St, 1, Lviv"
+  },
+  {
+    "id": "st-georges-cathedral",
+    "name": "St. George's Cathedral",
+    "category": "Cathedral",
+    "latitude": 49.838744,
+    "longitude": 24.012831,
+    "description": "A landmark baroque-rococo cathedral set on a hill above the city center.",
+    "address": "St. Yura Sq, 5, Lviv"
+  },
+  {
+    "id": "shevchenkivskyi-hai",
+    "name": "Shevchenkivskyi Hai",
+    "category": "Museum",
+    "latitude": 49.845,
+    "longitude": 24.064,
+    "description": "Open-air museum of folk architecture with historic wooden buildings and churches.",
+    "address": "Chernecha Hora St, 1, Lviv"
+  },
+  {
+    "id": "lviv-high-castle",
+    "name": "Lviv High Castle",
+    "category": "Monument",
+    "latitude": 49.848311,
+    "longitude": 24.039411,
+    "description": "Historic hilltop castle site and one of the most recognizable panoramic landmarks in Lviv.",
+    "address": "Zamkova St, Lviv"
+  },
+  {
+    "id": "st-onuphrius-monastery",
+    "name": "Monastery of St. Onuphrius",
+    "category": "Monastery",
+    "latitude": 49.84944,
+    "longitude": 24.02889,
+    "description": "Historic monastery complex north of the Old Town at the base of Castle Hill.",
+    "address": "Bohdana Khmelnytskoho St, 36, Lviv"
   }
 ]
