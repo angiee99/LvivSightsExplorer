@@ -6,8 +6,7 @@
     "latitude": 49.8442,
     "longitude": 24.0266,
     "description": "Historic opera house and one of the most recognized landmarks of Lviv.",
-    "address": "Svobody Ave, 28, Lviv",
-    "imageUrl": null
+    "address": "Svobody Ave, 28, Lviv"
   },
   {
     "id": "latin-cathedral",
@@ -16,8 +15,7 @@
     "latitude": 49.8419,
     "longitude": 24.0315,
     "description": "A Roman Catholic cathedral with Gothic and Baroque architectural elements.",
-    "address": "Katedralna Sq, 1, Lviv",
-    "imageUrl": null
+    "address": "Katedralna Sq, 1, Lviv"
   },
   {
     "id": "potocki-palace",
@@ -26,8 +24,7 @@
     "latitude": 49.8383,
     "longitude": 24.0268,
     "description": "A 19th-century palace now used as an art museum and exhibition venue.",
-    "address": "Kopernyka St, 15, Lviv",
-    "imageUrl": null
+    "address": "Kopernyka St, 15, Lviv"
   },
   {
     "id": "boim-chapel",
@@ -36,8 +33,7 @@
     "latitude": 49.8417,
     "longitude": 24.0313,
     "description": "An ornate chapel famous for its rich decorative Renaissance facade.",
-    "address": "Katedralna Sq, 1, Lviv",
-    "imageUrl": null
+    "address": "Katedralna Sq, 1, Lviv"
   },
   {
     "id": "bernardine-monastery",
@@ -46,7 +42,6 @@
     "latitude": 49.8404,
     "longitude": 24.0336,
     "description": "A fortified monastery complex with significant cultural and architectural value.",
-    "address": "Soborna Sq, 3A, Lviv",
-    "imageUrl": null
+    "address": "Soborna Sq, 3A, Lviv"
   }
 ]

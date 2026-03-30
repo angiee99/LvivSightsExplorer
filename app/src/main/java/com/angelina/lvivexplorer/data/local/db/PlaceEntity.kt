@@ -11,6 +11,5 @@ data class PlaceEntity(
     val latitude: Double,
     val longitude: Double,
     val description: String,
-    val address: String,
-    val imageUrl: String?
+    val address: String
 )

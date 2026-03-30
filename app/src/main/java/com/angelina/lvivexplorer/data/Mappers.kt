@@ -13,8 +13,7 @@ fun AssetPlaceDto.toEntity(): PlaceEntity = PlaceEntity(
     latitude = latitude,
     longitude = longitude,
     description = description,
-    address = address,
-    imageUrl = imageUrl
+    address = address
 )
 
 fun PlaceEntity.toDomain(): Place = Place(
@@ -24,8 +23,7 @@ fun PlaceEntity.toDomain(): Place = Place(
     latitude = latitude,
     longitude = longitude,
     description = description,
-    address = address,
-    imageUrl = imageUrl
+    address = address
 )
 
 fun DiaryEntryWithPlaceName.toDomain(): DiaryEntry = DiaryEntry(

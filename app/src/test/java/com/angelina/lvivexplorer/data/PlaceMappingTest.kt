@@ -15,8 +15,7 @@ class PlaceMappingTest {
             latitude = 49.8419,
             longitude = 24.0315,
             description = "Test description",
-            address = "Katedralna Sq, 1",
-            imageUrl = null
+            address = "Katedralna Sq, 1"
         )
 
         val entity = dto.toEntity()
@@ -26,6 +25,5 @@ class PlaceMappingTest {
         assertEquals("Cathedral", entity.category)
         assertEquals(49.8419, entity.latitude, 0.0)
         assertEquals(24.0315, entity.longitude, 0.0)
-        assertNull(entity.imageUrl)
     }
 }
